@@ -1,0 +1,23 @@
+# Entorno virtual
+venv/
+.env
+__pycache__/
+*.pyc
+
+# Archivos locales de bases de datos
+*.db
+*.sqlite3
+
+# Config de IDE
+.vscode/
+.idea/
+
+# Archivos de logs
+*.log
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de Cloudinary temporales (si los generás)
+uploads/
