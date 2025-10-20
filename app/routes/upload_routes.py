@@ -1,7 +1,7 @@
 # app/routes/upload_routes.py
 from flask import Blueprint, request, jsonify
 import cloudinary.uploader
-import imghdr
+import filetype  # reemplaza imghdr
 
 upload_bp = Blueprint("upload", __name__)
 
@@ -24,9 +24,9 @@ def upload_image():
         return jsonify({"error": "La imagen no puede superar los 150 KB"}), 400
 
     # Validar tipo
-    file_type = imghdr.what(file)
-    if file_type not in ALLOWED_EXTENSIONS:
-        return jsonify({"error": f"Tipo de imagen no permitido: {file_type}"}), 400
+    kind = filetype.guess(file)
+    if not kind or kind.extension not in ALLOWED_EXTENSIONS:
+        return jsonify({"error": f"Tipo de imagen no permitido: {kind.extension if kind else 'desconocido'}"}), 400
 
     try:
         # Subir a Cloudinary
@@ -50,4 +50,3 @@ def upload_image():
             "error": "Error al subir imagen",
             "details": str(e)
         }), 500
-        
