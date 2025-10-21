@@ -229,11 +229,16 @@ def get_post_detail(identifier):
 def get_my_posts():
     user = g.current_user
     page = request.args.get("page", 1, type=int)
-    per_page = min(request.args.get("per_page", 1, type=int), 50)
+    per_page = min(request.args.get("per_page", 10, type=int), 50)
 
-    pagination = Post.query.filter_by(user_id=user["id"])\
-                    .order_by(Post.created_at.desc())\
-                    .paginate(page=page, per_page=per_page, error_out=False)
+    # Si es admin, puede ver todos los posts
+    if user.get("is_admin"):
+        query = Post.query
+    else:
+        query = Post.query.filter_by(user_id=user["id"])
+
+    pagination = query.order_by(Post.created_at.desc()) \
+                      .paginate(page=page, per_page=per_page, error_out=False)
 
     return jsonify({
         "posts": [p.to_dict() for p in pagination.items],
@@ -241,6 +246,7 @@ def get_my_posts():
         "page": pagination.page,
         "pages": pagination.pages
     }), 200
+
 
 import cloudinary
 import cloudinary.uploader
