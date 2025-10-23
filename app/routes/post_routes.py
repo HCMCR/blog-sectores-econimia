@@ -36,7 +36,7 @@ def create_post():
     week_number = get_current_week_number()
 
     # Validar campos obligatorios
-    required_fields = ["title", "description", "category", "content_blocks"]
+    required_fields = ["title", "description", "content_blocks"]
     missing = [f for f in required_fields if not data.get(f)]
     if missing:
         return jsonify({"error": f"Faltan campos obligatorios: {', '.join(missing)}"}), 400
@@ -172,8 +172,8 @@ def get_posts():
 
         if company_id:
             query = query.filter_by(company_id=company_id)
-        if category:
-            query = query.filter(Post.category.ilike(category))  # case-insensitive
+        # if category:
+        #     query = query.filter(Post.category.ilike(category))  # case-insensitive
 
         pagination = query.order_by(Post.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
